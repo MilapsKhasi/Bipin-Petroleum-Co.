@@ -1,0 +1,1184 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bipin Petroleum Co. - Access Portal</title>
+    <!-- Inter Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: {
+                DEFAULT: '#2563EB',
+                hover: '#1D4ED8',
+              },
+              accent: {
+                oil: '#10B981',
+              },
+              industrial: {
+                bg: '#F8FAFC',
+                card: '#FFFFFF',
+                dark: '#0F172A',
+                muted: '#64748B',
+                border: '#E2E8F0',
+              }
+            },
+            fontFamily: {
+              sans: ['Inter', '-apple-system', 'sans-serif'],
+              mono: ['JetBrains Mono', 'monospace']
+            }
+          }
+        }
+      }
+    </script>
+    <!-- Lucide icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Global CSS override -->
+    <style>
+      :root {
+        --primary-color: #2563EB;
+        --primary-color-hover: #1D4ED8;
+        --accent-oil-green: #10B981;
+        --bg-industrial: #F8FAFC;
+        --surface-card: #FFFFFF;
+        --text-dark: #0F172A;
+        --text-muted: #64748B;
+        --border-subtle: #E2E8F0;
+      }
+      *, *::before, *::after {
+        outline-width: 0 !important;
+      }
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: var(--bg-industrial);
+        color: var(--text-dark);
+      }
+    </style>
+  </head>
+  <body class="bg-industrial-bg text-industrial-dark flex min-h-screen flex-col justify-between overflow-x-hidden antialiased">
+    
+    <!-- Top Decorative Line -->
+    <div class="h-1.5 w-full bg-gradient-to-r from-primary via-blue-400 to-accent-oil"></div>
+
+    <!-- Main Container -->
+    <div class="flex flex-1 items-center justify-center p-4">
+      <div class="w-full max-w-md bg-industrial-card border border-industrial-border rounded-xl p-8 space-y-6">
+        
+        <!-- Header & Branding -->
+        <div class="flex flex-col items-center text-center space-y-3">
+          <svg class="w-16 h-10 shrink-0" viewBox="0 0 100 35" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <text x="2" y="28" font-family="'Poppins', sans-serif" font-weight="600" font-style="italic" font-size="28" fill="#1A66B2">b</text>
+            <text x="20" y="28" font-family="'Poppins', sans-serif" font-weight="600" font-style="italic" font-size="28" fill="#1A66B2">p</text>
+            <text x="36" y="28" font-family="'Poppins', sans-serif" font-weight="600" font-style="italic" font-size="28" fill="#10B981">c</text>
+            <path d="M29,12 C28,2 38,0 44,5 C42,10 35,16 29,12 Z" fill="#10B981" />
+          </svg>
+          <div>
+            <h1 class="text-xl font-bold tracking-tight text-industrial-dark">Bipin Petroleum Co.</h1>
+            <p class="text-xs text-industrial-muted mt-1">Enterprise Accounting Workspace</p>
+          </div>
+        </div>
+
+        <!-- Configuration Instruction Warning (Hidden if configured) -->
+        <div id="config-instructions" class="hidden bg-slate-50 border border-amber-500/20 rounded-lg p-5 space-y-4">
+          <div class="flex items-center gap-2.5 text-amber-600">
+            <i data-lucide="alert-triangle" class="w-5 h-5 shrink-0"></i>
+            <span class="text-sm font-semibold text-amber-700">Supabase Set Up Required</span>
+          </div>
+          <p class="text-xs leading-relaxed text-slate-600">
+            This workspace needs a Supabase connection. Please update the <code class="bg-slate-100 px-1 py-0.5 rounded text-red-605 font-mono text-[11px]">config.js</code> file in the project folder with your project credentials:
+          </p>
+          <div class="bg-slate-50 p-3 rounded font-mono text-[10px] text-slate-600 border border-slate-200 space-y-2">
+            <div>window.SUPABASE_URL = "<span class="text-slate-700">https://your-project.supabase.co</span>"</div>
+            <div>window.SUPABASE_ANON_KEY = "<span class="text-slate-700">your-anon-key</span>"</div>
+          </div>
+          <p class="text-[11px] text-slate-500 leading-normal">
+            After editing, save the file and refresh this browser window to initialize the secure authentication portal.
+          </p>
+          <button onclick="window.location.reload()" class="w-full bg-slate-100 hover:bg-slate-200 py-2 rounded text-xs font-semibold text-slate-800 transition-colors cursor-pointer">
+            Check Configuration Again
+          </button>
+        </div>
+
+        <!-- License-related view containers -->
+        <div id="license-gate-container" class="space-y-5">
+          <div class="space-y-2">
+            <h2 class="text-sm font-semibold uppercase tracking-wider text-industrial-muted">License Verification</h2>
+            <p class="text-xs text-industrial-muted leading-relaxed">Enter your Bipin Petroleum Co. workspace license ID to unlock the access portal.</p>
+          </div>
+          
+          <div id="license-status-message" class="hidden rounded-lg p-3 text-xs border bg-red-50 border-red-200 text-red-800 flex items-start gap-2">
+            <i data-lucide="alert-circle" class="w-4 h-4 shrink-0 mt-0.5"></i>
+            <span id="license-status-text" class="font-medium"></span>
+          </div>
+
+          <div class="space-y-1.5">
+            <label for="license-input" class="block text-[11px] font-semibold uppercase tracking-wider text-industrial-muted">License ID</label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 pointer-events-none">
+                <i data-lucide="key" class="w-4 h-4"></i>
+              </span>
+              <input id="license-input" type="text" placeholder="LIC-XXXX-XXXX-XXXX" class="w-full bg-white border border-industrial-border focus:border-primary text-sm py-2 pl-9 pr-3 rounded-lg text-industrial-dark font-mono font-medium tracking-wide transition-colors placeholder:text-slate-400 uppercase">
+            </div>
+          </div>
+
+          <button id="verify-license-btn" onclick="verifyLicenseID()" class="w-full bg-primary hover:bg-primary-hover py-2.5 rounded-lg text-sm font-bold text-white transition-colors flex items-center justify-center gap-2 cursor-pointer border-0">
+            <span>Authorize Portal Access</span>
+            <div id="license-spinner" class="hidden w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+          </button>
+
+          <div class="text-center pt-2 flex flex-col gap-2.5">
+            <button onclick="showPurchasePlansScreen()" class="text-xs font-semibold text-primary hover:text-primary-hover hover:underline transition-colors cursor-pointer flex items-center justify-center gap-1.5 mx-auto bg-transparent border-0 p-0 font-bold">
+              <i data-lucide="shopping-cart" class="w-3.5 h-3.5"></i>
+              Purchase New License
+            </button>
+            <div class="border-t border-slate-150 my-1"></div>
+            <button onclick="showQuickRegisterScreen()" class="text-xs font-semibold text-emerald-600 hover:text-emerald-700 hover:underline transition-colors waves-effect cursor-pointer flex items-center justify-center gap-1.5 mx-auto bg-transparent border-0 p-0 font-bold">
+              <i data-lucide="user-plus" class="w-3.5 h-3.5 animate-bounce"></i>
+              No Account? Register & Get Free License
+            </button>
+          </div>
+        </div>
+
+        <!-- Quick Register for New Users -->
+        <div id="quick-register-container" class="hidden space-y-5">
+          <div class="flex items-center justify-between border-b border-industrial-border pb-3">
+            <div class="text-left">
+              <h2 class="text-sm font-bold uppercase tracking-wider text-slate-800">Quick Registration</h2>
+              <p class="text-[10px] text-industrial-muted mt-0.5">Generate a free license and register your account immediately</p>
+            </div>
+            <button type="button" onclick="showLicenseGateScreen()" class="p-1 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded transition-colors cursor-pointer bg-transparent border-0">
+              <i data-lucide="arrow-left" class="w-4 h-4"></i>
+            </button>
+          </div>
+
+          <div id="quick-reg-status-message" class="hidden rounded-lg p-3 text-xs border"></div>
+
+          <form id="quick-register-form" onsubmit="handleQuickRegisterSubmit(event)" class="space-y-4 text-left">
+            <div class="space-y-1.5">
+              <label for="quick-name" class="block text-[11px] font-semibold uppercase tracking-wider text-industrial-muted">Operator Name</label>
+              <div class="relative">
+                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 pointer-events-none">
+                  <i data-lucide="user" class="w-4 h-4"></i>
+                </span>
+                <input id="quick-name" required type="text" placeholder="John Doe" class="w-full bg-white border border-industrial-border focus:border-primary text-sm py-2 pl-9 pr-3 rounded-lg text-industrial-dark font-medium transition-colors">
+              </div>
+            </div>
+
+            <div class="space-y-1.5">
+              <label for="quick-email" class="block text-[11px] font-semibold uppercase tracking-wider text-industrial-muted">Registered Email Address</label>
+              <div class="relative">
+                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 pointer-events-none">
+                  <i data-lucide="mail" class="w-4 h-4"></i>
+                </span>
+                <input id="quick-email" required type="email" placeholder="owner@bipinpetroleum.com" class="w-full bg-white border border-industrial-border focus:border-primary text-sm py-2 pl-9 pr-3 rounded-lg text-industrial-dark font-medium transition-colors">
+              </div>
+            </div>
+
+            <div class="space-y-1.5">
+              <label for="quick-password" class="block text-[11px] font-semibold uppercase tracking-wider text-industrial-muted">Password (min 6 characters)</label>
+              <div class="relative">
+                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 pointer-events-none">
+                  <i data-lucide="lock" class="w-4 h-4"></i>
+                </span>
+                <input id="quick-password" required minlength="6" type="password" placeholder="••••••••" class="w-full bg-white border border-industrial-border focus:border-primary text-sm py-2 pl-9 pr-3 rounded-lg text-industrial-dark font-medium transition-colors">
+              </div>
+            </div>
+
+            <button id="quick-register-btn" type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 py-2.5 rounded-lg text-sm font-bold text-white transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-sm border-0">
+              <i data-lucide="shield-check" class="w-4 h-4"></i>
+              <span>Register & Generate License</span>
+              <div id="quick-register-spinner" class="hidden w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+            </button>
+          </form>
+        </div>
+
+        <div id="purchase-plans-container" class="hidden space-y-6">
+          <div class="flex items-center justify-between border-b border-industrial-border pb-3">
+            <div class="text-left">
+              <h2 class="text-sm font-bold uppercase tracking-wider text-slate-800">Purchase Registry License</h2>
+              <p class="text-[10px] text-industrial-muted mt-0.5">Choose a subscription or lifetime plan</p>
+            </div>
+            <button onclick="showLicenseGateScreen()" class="p-1 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded transition-colors cursor-pointer bg-transparent border-0">
+              <i data-lucide="arrow-left" class="w-4 h-4"></i>
+            </button>
+          </div>
+
+          <!-- Section A: Standard Plans -->
+          <div class="space-y-3 text-left">
+            <h3 class="text-[10px] font-bold uppercase tracking-wider text-slate-400 border-l-2 border-blue-500 pl-2">Standard Section</h3>
+            <div class="grid grid-cols-1 gap-3">
+              <!-- Monthly Card -->
+              <div class="border border-industrial-border rounded-lg p-3 flex justify-between items-center bg-slate-50/50">
+                <div class="text-left">
+                  <span class="block text-xs font-bold text-slate-800">Monthly Plan</span>
+                  <span class="text-[11px] text-slate-500">Monthly at ₹499</span>
+                </div>
+                <button type="button" disabled class="bg-slate-105 text-slate-400 text-xs font-semibold px-3 py-1.5 rounded cursor-not-allowed border-0">Get Started</button>
+              </div>
+
+              <!-- Extra Plan Card (for the 3rd card in standard) -->
+              <div class="border border-industrial-border rounded-lg p-3 flex justify-between items-center bg-slate-50/50">
+                <div class="text-left">
+                  <span class="block text-xs font-bold text-slate-800">Quarterly Plan</span>
+                  <span class="text-[11px] text-slate-500">Quarterly at ₹1,499</span>
+                </div>
+                <button type="button" disabled class="bg-slate-105 text-slate-400 text-xs font-semibold px-3 py-1.5 rounded cursor-not-allowed border-0">Get Started</button>
+              </div>
+
+              <!-- Yearly Card (Linked) -->
+              <div class="border border-blue-200 bg-blue-50/30 rounded-lg p-3 flex justify-between items-center relative overflow-hidden">
+                <div class="text-left">
+                  <span class="block text-xs font-bold text-blue-900">Yearly Plan</span>
+                  <span class="text-[11px] text-blue-700">Yearly at ₹4,999</span>
+                </div>
+                <button type="button" onclick="startYearlyCheckout()" class="bg-primary hover:bg-primary-hover text-white text-xs font-bold px-4 py-1.5 rounded transition-colors cursor-pointer border-0">Get Started</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section B: Lifetime Plans -->
+          <div class="space-y-3 text-left">
+            <h3 class="text-[10px] font-bold uppercase tracking-wider text-slate-400 border-l-2 border-emerald-500 pl-2">Lifetime Section</h3>
+            <div class="grid grid-cols-1 gap-3">
+              <!-- Lifetime with Server Card -->
+              <div class="border border-industrial-border rounded-lg p-3 flex justify-between items-center bg-slate-50/50">
+                <div class="text-left">
+                  <span class="block text-xs font-bold text-slate-800">Lifetime with Server</span>
+                  <span class="text-[11px] text-slate-500">At ₹24,499</span>
+                </div>
+                <button type="button" disabled class="bg-slate-105 text-slate-400 text-xs font-semibold px-3 py-1.5 rounded cursor-not-allowed border-0">Get Started</button>
+              </div>
+
+              <!-- Lifetime without Server Card -->
+              <div class="border border-industrial-border rounded-lg p-3 flex justify-between items-center bg-slate-50/50">
+                <div class="text-left">
+                  <span class="block text-xs font-bold text-slate-800 font-semibold">Lifetime without Server</span>
+                  <span class="text-[11px] text-slate-500">At ₹12,499</span>
+                </div>
+                <button type="button" disabled class="bg-slate-105 text-slate-400 text-xs font-semibold px-3 py-1.5 rounded cursor-not-allowed border-0">Get Started</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="text-center pt-1">
+            <button onclick="showLicenseGateScreen()" class="text-[11px] font-medium text-slate-500 hover:text-slate-700 hover:underline bg-transparent border-0 p-0">
+              I already have a License ID
+            </button>
+          </div>
+        </div>
+
+        <div id="yearly-checkout-container" class="hidden space-y-5">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div class="text-left">
+              <h2 class="text-sm font-semibold uppercase tracking-wider text-industrial-muted">Yearly Plan billing</h2>
+              <p class="text-[11px] text-primary font-bold">Total Payable: ₹4,999</p>
+            </div>
+            <button onclick="showPurchasePlansScreen()" class="p-1 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded transition-colors cursor-pointer bg-transparent border-0">
+              <i data-lucide="arrow-left" class="w-4 h-4"></i>
+            </button>
+          </div>
+
+          <!-- Checkout Details -->
+          <form id="checkout-form" onsubmit="handleCheckoutSubmit(event)" class="space-y-4 text-left">
+            <div class="space-y-3">
+              <span class="block text-[11px] font-semibold uppercase tracking-wider text-industrial-muted">Payment Modes</span>
+              <div class="grid grid-cols-2 gap-2">
+                <div type="button" onclick="selectPayOption('upi')" id="pay-opt-upi" class="border border-primary rounded-lg p-2.5 flex flex-col items-center justify-center gap-1 cursor-pointer bg-blue-50/50">
+                  <i data-lucide="smartphone" class="w-4 h-4 text-primary"></i>
+                  <span class="text-[11px] font-semibold text-slate-700">UPI ID</span>
+                </div>
+                <div type="button" onclick="selectPayOption('card')" id="pay-opt-card" class="border border-slate-200 rounded-lg p-2.5 flex flex-col items-center justify-center gap-1 cursor-pointer bg-slate-50">
+                  <i data-lucide="credit-card" class="w-4 h-4 text-slate-500"></i>
+                  <span class="text-[11px] font-semibold text-slate-700">Credit Card</span>
+                </div>
+              </div>
+
+              <!-- QR Box for UPI -->
+              <div id="upi-qr-display-box" class="bg-blue-50/30 border border-blue-100 rounded-lg p-3 text-center space-y-2">
+                <div class="mx-auto w-24 h-24 bg-white border border-slate-200 rounded p-1 flex items-center justify-center">
+                  <div class="w-full h-full bg-slate-100 rounded flex flex-col items-center justify-center text-[10px] text-slate-400 font-mono">
+                    <i data-lucide="qr-code" class="w-10 h-10 text-slate-400 mb-0.5 animate-pulse"></i>
+                    <span>bipin@paytm</span>
+                  </div>
+                </div>
+                <p class="text-[10px] text-slate-500">Scan QR or pay directly to: <span class="font-mono font-semibold text-slate-700">bipin@paytm</span></p>
+              </div>
+
+              <!-- Card mock inputs -->
+              <div id="card-inputs-display-box" class="hidden border border-slate-200 rounded-lg p-3 bg-slate-50/50 space-y-2">
+                <input type="text" placeholder="Card Number (4000 1234 5678 9010)" class="w-full bg-white border border-slate-200 text-xs py-1.5 px-2 rounded-md">
+                <div class="grid grid-cols-2 gap-2">
+                  <input type="text" placeholder="MM/YY" class="w-full bg-white border border-slate-200 text-xs py-1.5 px-2 rounded-md">
+                  <input type="password" placeholder="CVV" class="w-full bg-white border border-slate-200 text-xs py-1.5 px-2 rounded-md">
+                </div>
+              </div>
+            </div>
+
+            <div class="space-y-1.5">
+              <label for="checkout-email" class="block text-[11px] font-semibold uppercase tracking-wider text-industrial-muted">Registered Email Address</label>
+              <div class="relative">
+                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 pointer-events-none">
+                  <i data-lucide="mail" class="w-4 h-4"></i>
+                </span>
+                <input id="checkout-email" required type="email" placeholder="owner@bipinpetroleum.com" class="w-full bg-white border border-industrial-border focus:border-primary text-sm py-2 pl-9 pr-3 rounded-lg text-industrial-dark font-medium transition-colors">
+              </div>
+            </div>
+
+            <!-- Paid On-Cash Checkbox -->
+            <label class="flex items-start gap-2.5 p-3 rounded-lg border border-amber-250 bg-amber-50/40 hover:bg-amber-50 cursor-pointer transition-colors">
+              <input id="checkout-paid-cash" type="checkbox" class="w-4 h-4 mt-0.5 text-primary rounded border-slate-300 focus:ring-primary cursor-pointer">
+              <div class="flex flex-col">
+                <span class="text-xs font-bold text-amber-900 select-none">Paid on-cash with administrator</span>
+                <span class="text-[10px] text-amber-700 select-none mt-0.5 leading-normal">Tick if you completed physical cash or hand-to-hand payment to authorize instant server license activation.</span>
+              </div>
+            </label>
+
+            <!-- Complete Submit Button -->
+            <button id="complete-checkout-btn" type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 py-2.5 rounded-lg text-sm font-bold text-white transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-sm border-0">
+              <i data-lucide="file-check" class="w-4 h-4"></i>
+              <span>Activate & Save License ID</span>
+              <div id="checkout-spinner" class="hidden w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+            </button>
+          </form>
+        </div>
+
+        <div id="license-success-container" class="hidden space-y-6 text-center">
+          <div class="flex flex-col items-center">
+            <div class="w-12 h-12 bg-emerald-50 rounded-full flex items-center justify-center border border-emerald-200 mb-2 text-emerald-600">
+              <i data-lucide="check-circle-2" class="w-7 h-7"></i>
+            </div>
+            <h2 class="text-sm font-bold uppercase tracking-wider text-slate-800">License Verification Success</h2>
+            <p id="license-success-mode-info" class="text-xs text-slate-500 mt-1">Registry created for your business terminal.</p>
+          </div>
+
+          <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 space-y-3 relative overflow-hidden text-left font-sans">
+            <div class="space-y-1">
+              <span class="block text-[9px] font-bold uppercase tracking-wider text-slate-400">Authorized License ID</span>
+              <div class="flex items-center justify-between gap-2 bg-white border border-slate-200 rounded-lg p-2.5 font-mono text-xs text-slate-800 select-all font-bold tracking-wider">
+                <span id="displayed-license-id">LIC-XXXX-XXXX-XXXX</span>
+                <button type="button" onclick="copyLicenseToClipboard()" class="p-1 hover:bg-slate-100 rounded text-slate-400 hover:text-slate-600 transition-colors bg-transparent border-0" title="Copy to clipboard">
+                  <i data-lucide="copy" class="w-4.5 h-4.5"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="border-t border-slate-100 pt-2 flex flex-col gap-0.5 font-sans">
+              <div class="flex justify-between text-[11px]">
+                <span class="text-slate-400">Linked Email:</span>
+                <span id="displayed-license-email" class="font-semibold text-slate-705"></span>
+              </div>
+              <div class="flex justify-between text-[11px]">
+                <span class="text-slate-400">Status:</span>
+                <span class="font-bold text-emerald-600 text-right">Active / Paid</span>
+              </div>
+            </div>
+          </div>
+
+          <p class="text-[10px] text-slate-500 leading-normal bg-slate-50 p-2.5 rounded-lg border border-slate-200/50 text-left">
+            Copy and store this License ID. It has been validated in our ledger and saved to your terminal profile.
+          </p>
+
+          <button onclick="applyVerifiedLicenseAndGoToAuth()" class="w-full bg-primary hover:bg-primary-hover py-2.5 rounded-lg text-sm font-bold text-white transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-sm border-0">
+            <span>Proceed to Access Portal</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </button>
+        </div>
+
+        <!-- Auth Form UI Container wrapper -->
+        <div id="auth-form-wrapper" class="hidden space-y-4">
+          <div class="flex justify-between items-center mb-1 pb-1 border-b border-slate-100">
+            <span class="text-[10px] font-bold text-emerald-600 uppercase flex items-center gap-1 select-none">
+              <i data-lucide="shield-check" class="w-3.5 h-3.5"></i> License active
+            </span>
+            <button onclick="switchLicense()" class="text-[9px] font-bold text-slate-400 hover:text-red-500 hover:underline bg-transparent border-0 p-0 cursor-pointer">
+              Change License ID
+            </button>
+          </div>
+          
+          <!-- Tab toggling header -->
+          <div class="grid grid-cols-2 bg-slate-50 p-1 rounded-lg border border-industrial-border">
+            <button id="mode-signin-btn" onclick="setAuthMode('signin')" class="py-1.5 text-xs font-bold rounded-md transition-all duration-150 text-white bg-primary">
+              Sign In
+            </button>
+            <button id="mode-signup-btn" onclick="setAuthMode('signup')" class="py-1.5 text-xs font-semibold text-industrial-muted hover:text-industrial-dark rounded-md transition-all duration-150">
+              Sign Up
+            </button>
+          </div>
+
+          <!-- Notification Toast/Alert Area -->
+          <div id="auth-status-bar" class="hidden rounded-lg p-3 text-xs flex items-start gap-2 border"></div>
+
+          <!-- Fields Form -->
+          <form id="auth-form" onsubmit="handleAuthSubmit(event)" class="space-y-4">
+            <!-- Full Name Container (Only shown in Sign Up) -->
+            <div id="full-name-container" class="hidden space-y-1.5">
+              <label for="reg-name" class="block text-[11px] font-semibold uppercase tracking-wider text-industrial-muted">Display Name / Operator Name</label>
+              <div class="relative">
+                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 pointer-events-none">
+                  <i data-lucide="user" class="w-4 h-4"></i>
+                </span>
+                <input id="reg-name" type="text" placeholder="John Doe" class="w-full bg-white border border-industrial-border focus:border-primary text-sm py-2 pl-9 pr-3 rounded-lg text-industrial-dark font-medium transition-colors placeholder:text-slate-400">
+              </div>
+            </div>
+
+            <!-- Email address -->
+            <div class="space-y-1.5">
+              <label for="auth-email" class="block text-[11px] font-semibold uppercase tracking-wider text-industrial-muted">Email Address</label>
+              <div class="relative">
+                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 pointer-events-none">
+                  <i data-lucide="mail" class="w-4 h-4"></i>
+                </span>
+                <input id="auth-email" required type="email" placeholder="operator@bipinpetroleum.com" class="w-full bg-white border border-industrial-border focus:border-primary text-sm py-2 pl-9 pr-3 rounded-lg text-industrial-dark font-medium transition-colors placeholder:text-slate-400">
+              </div>
+            </div>
+
+            <!-- Password -->
+            <div class="space-y-1.5">
+              <div class="flex items-center justify-between">
+                <label for="auth-password" class="block text-[11px] font-semibold uppercase tracking-wider text-industrial-muted">Password</label>
+              </div>
+              <div class="relative">
+                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 pointer-events-none">
+                  <i data-lucide="lock" class="w-4 h-4"></i>
+                </span>
+                <input id="auth-password" required minlength="6" type="password" placeholder="••••••••" class="w-full bg-white border border-industrial-border focus:border-primary text-sm py-2 pl-9 pr-3 rounded-lg text-industrial-dark font-medium transition-colors placeholder:text-slate-400">
+              </div>
+            </div>
+
+            <!-- Submit Button Trigger -->
+            <button id="submit-auth-btn" type="submit" class="w-full bg-primary hover:bg-primary-hover py-2 rounded-lg text-sm font-bold text-white transition-colors flex items-center justify-center gap-2 cursor-pointer mt-2">
+              <span id="btn-label-text">Sign In to Dashboard</span>
+              <div id="loader-spinner" class="hidden w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+            </button>
+          </form>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="p-6 text-center text-[10px] text-industrial-muted border-t border-industrial-border bg-white/20">
+      <div>&copy; 2026 Bipin Petroleum Co. All rights reserved. Secure Cloud Authentication</div>
+    </footer>
+
+    <!-- Supabase CDN and Local Config scripts -->
+    <script>
+      // Fix for "Cannot set property fetch of #<Window> which has only a getter" issue
+      (function() {
+        try {
+          const originalFetch = window.fetch;
+          Object.defineProperty(window, 'fetch', {
+            value: originalFetch,
+            writable: true,
+            configurable: true,
+            enumerable: true
+          });
+        } catch (e) {
+          console.warn("Could not patch window.fetch", e);
+        }
+      })();
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- IMPORTANT: Load config.js from root folder -->
+    <script src="../config.js"></script>
+    
+    <script>
+      // Initialize Supabase client with config
+      let supabaseClient = null;
+      
+      if (window.SUPABASE_URL && window.SUPABASE_ANON_KEY) {
+        // Clean URL - remove /rest/v1/ if present
+        let cleanUrl = window.SUPABASE_URL.trim();
+        cleanUrl = cleanUrl.replace(/\/rest\/v1\/?$/, '');
+        cleanUrl = cleanUrl.replace(/\/+$/, '');
+        supabaseClient = supabase.createClient(cleanUrl, window.SUPABASE_ANON_KEY.trim());
+        window.supabaseClient = supabaseClient;
+        console.log("Supabase initialized with URL:", cleanUrl);
+      } else {
+        console.error("config.js not loaded or missing credentials. Check that config.js exists in the root folder.");
+      }
+
+      let currentMode = 'signin';
+      let selectedPayMethod = 'upi';
+
+      const isPlaceholderConfig = () => {
+        return (
+          !window.SUPABASE_URL ||
+          !window.SUPABASE_ANON_KEY ||
+          window.SUPABASE_URL === "https://your-project-id.supabase.co" ||
+          window.SUPABASE_ANON_KEY === "your-anon-public-key" ||
+          window.SUPABASE_URL.includes("your-project.supabase.co")
+        );
+      };
+
+      // ----------------------------------------------------
+      // License ID View Management Operations
+      // ----------------------------------------------------
+      
+      function generateRandomLicenseID() {
+        const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        let b1 = "", b2 = "", b3 = "";
+        for (let i = 0; i < 4; i++) {
+          b1 += chars.charAt(Math.floor(Math.random() * chars.length));
+          b2 += chars.charAt(Math.floor(Math.random() * chars.length));
+          b3 += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        return `LIC-${b1}-${b2}-${b3}`;
+      }
+
+      function generateUUID() {
+        if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+          return crypto.randomUUID();
+        }
+        // Fallback standard RFC4122 v4 UUID generator
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+          const r = Math.random() * 16 | 0;
+          const v = c === 'x' ? r : (r & 0x3 | 0x8);
+          return v.toString(16);
+        });
+      }
+
+      function showLicenseGateScreen() {
+        document.getElementById("license-gate-container").classList.remove("hidden");
+        document.getElementById("purchase-plans-container").classList.add("hidden");
+        document.getElementById("yearly-checkout-container").classList.add("hidden");
+        document.getElementById("license-success-container").classList.add("hidden");
+        document.getElementById("auth-form-wrapper").classList.add("hidden");
+        const qrContainer = document.getElementById("quick-register-container");
+        if (qrContainer) qrContainer.classList.add("hidden");
+        
+        // Hide errors
+        document.getElementById("license-status-message").classList.add("hidden");
+        if (window.lucide) window.lucide.createIcons();
+      }
+
+      function showPurchasePlansScreen() {
+        document.getElementById("license-gate-container").classList.add("hidden");
+        document.getElementById("purchase-plans-container").classList.remove("hidden");
+        document.getElementById("yearly-checkout-container").classList.add("hidden");
+        document.getElementById("license-success-container").classList.add("hidden");
+        document.getElementById("auth-form-wrapper").classList.add("hidden");
+        const qrContainer = document.getElementById("quick-register-container");
+        if (qrContainer) qrContainer.classList.add("hidden");
+        if (window.lucide) window.lucide.createIcons();
+      }
+
+      function startYearlyCheckout() {
+        document.getElementById("license-gate-container").classList.add("hidden");
+        document.getElementById("purchase-plans-container").classList.add("hidden");
+        document.getElementById("yearly-checkout-container").classList.remove("hidden");
+        document.getElementById("license-success-container").classList.add("hidden");
+        document.getElementById("auth-form-wrapper").classList.add("hidden");
+        const qrContainer = document.getElementById("quick-register-container");
+        if (qrContainer) qrContainer.classList.add("hidden");
+        
+        // Reset checkout form fields
+        document.getElementById("checkout-email").value = "";
+        document.getElementById("checkout-paid-cash").checked = false;
+        selectPayOption('upi');
+        if (window.lucide) window.lucide.createIcons();
+      }
+
+      function showQuickRegisterScreen() {
+        document.getElementById("license-gate-container").classList.add("hidden");
+        document.getElementById("purchase-plans-container").classList.add("hidden");
+        document.getElementById("yearly-checkout-container").classList.add("hidden");
+        document.getElementById("license-success-container").classList.add("hidden");
+        document.getElementById("auth-form-wrapper").classList.add("hidden");
+        
+        const qrContainer = document.getElementById("quick-register-container");
+        if (qrContainer) qrContainer.classList.remove("hidden");
+        
+        document.getElementById("quick-name").value = "";
+        document.getElementById("quick-email").value = "";
+        document.getElementById("quick-password").value = "";
+        
+        const qMsg = document.getElementById("quick-reg-status-message");
+        if (qMsg) qMsg.classList.add("hidden");
+        if (window.lucide) window.lucide.createIcons();
+      }
+
+      async function goToSignInWithEmail(email) {
+        if (!email) return;
+        
+        // Hide containers
+        document.getElementById("license-gate-container").classList.add("hidden");
+        const plansContainer = document.getElementById("purchase-plans-container");
+        if (plansContainer) plansContainer.classList.add("hidden");
+        const checkoutContainer = document.getElementById("yearly-checkout-container");
+        if (checkoutContainer) checkoutContainer.classList.add("hidden");
+        const successContainer = document.getElementById("license-success-container");
+        if (successContainer) successContainer.classList.add("hidden");
+        const qrContainer = document.getElementById("quick-register-container");
+        if (qrContainer) qrContainer.classList.add("hidden");
+        
+        // Try to fetch license_id from database if we don't have a valid one cached
+        try {
+          if (window.supabaseClient) {
+            const { data, error } = await window.supabaseClient
+              .from("users")
+              .select("license_id")
+              .eq("email", email.toLowerCase().trim());
+              
+            if (!error && data && data.length > 0 && data[0].license_id) {
+              localStorage.setItem("workspace_license_id", data[0].license_id);
+              document.getElementById("license-input").value = data[0].license_id;
+            }
+          }
+        } catch (e) {
+          console.error("Failed to pre-fetch license ID during user transfer:", e);
+        }
+        
+        // Show auth form wrapper and select signin mode
+        document.getElementById("auth-form-wrapper").classList.remove("hidden");
+        setAuthMode('signin');
+        document.getElementById("auth-email").value = email;
+        document.getElementById("auth-password").value = "";
+        
+        hideStatusBar();
+        if (window.lucide) window.lucide.createIcons();
+      }
+
+      async function handleQuickRegisterSubmit(event) {
+        event.preventDefault();
+        const name = document.getElementById("quick-name").value.trim();
+        const email = document.getElementById("quick-email").value.trim().toLowerCase();
+        const password = document.getElementById("quick-password").value;
+        const submitBtn = document.getElementById("quick-register-btn");
+        const spinner = document.getElementById("quick-register-spinner");
+        const statusMsg = document.getElementById("quick-reg-status-message");
+        
+        if (!name || !email || !password) {
+          alert("All fields are required.");
+          return;
+        }
+        
+        submitBtn.disabled = true;
+        spinner.classList.remove("hidden");
+        statusMsg.classList.add("hidden");
+        
+        try {
+          if (!window.supabaseClient) {
+            alert("Supabase is not configured yet inside your workspace. Check config.js");
+            submitBtn.disabled = false;
+            spinner.classList.add("hidden");
+            return;
+          }
+          
+          // 1. Generate active license ID
+          const trialLicenseId = generateRandomLicenseID();
+          
+          // 2. Register user with Supabase Auth
+          const { data, error: signUpErr } = await window.supabaseClient.auth.signUp({
+            email,
+            password,
+            options: {
+              data: {
+                full_name: name,
+                license_id: trialLicenseId
+              }
+            }
+          });
+          
+          if (signUpErr) {
+            console.error(signUpErr);
+            statusMsg.className = "rounded-lg p-3 text-xs border bg-red-50 border-red-200 text-red-800 flex flex-col gap-2 items-start";
+            
+            const isAlreadyReg = signUpErr.message.toLowerCase().includes("already registered") || 
+                                 signUpErr.message.toLowerCase().includes("already exists") ||
+                                 signUpErr.message.toLowerCase().includes("email_exists") ||
+                                 signUpErr.message.toLowerCase().includes("unique constraint");
+                                 
+            if (isAlreadyReg) {
+              statusMsg.innerHTML = `
+                <div class="flex items-start gap-2 w-full">
+                  <i data-lucide="alert-circle" class="w-4 h-4 shrink-0 mt-0.5 text-red-600"></i>
+                  <div class="w-full">
+                    <span class="block font-bold mb-0.5 text-red-900">User already registered</span>
+                    <span class="leading-normal block text-red-800">The email address <strong>${email}</strong> has already been registered in our operator database. You can sign in immediately inside the access portal using your license!</span>
+                  </div>
+                </div>
+                <div class="mt-1.5 pl-6 w-full text-left">
+                  <button type="button" onclick="goToSignInWithEmail('${email}')" class="bg-primary hover:bg-primary-hover text-white text-xs font-bold px-3 py-1.5 rounded-lg border-0 cursor-pointer transition-colors shadow-sm inline-flex items-center gap-1.5">
+                    <i data-lucide="log-in" class="w-3.5 h-3.5"></i>
+                    <span>Sign In to Dashboard instead</span>
+                  </button>
+                </div>
+              `;
+            } else {
+              statusMsg.innerHTML = `
+                <div class="flex items-start gap-2">
+                  <i data-lucide="alert-circle" class="w-4 h-4 shrink-0 mt-0.5"></i>
+                  <span>Auth signup failed: ${signUpErr.message}</span>
+                </div>
+              `;
+            }
+            statusMsg.classList.remove("hidden");
+            if (window.lucide) window.lucide.createIcons();
+            submitBtn.disabled = false;
+            spinner.classList.add("hidden");
+            return;
+          }
+          
+          // Cache verified license
+          localStorage.setItem("workspace_license_id", trialLicenseId);
+          
+          // Show license success container with details
+          document.getElementById("displayed-license-id").textContent = trialLicenseId;
+          document.getElementById("displayed-license-email").textContent = email;
+          document.getElementById("license-success-mode-info").textContent = "Free workspace trial active. New account registration succeeded!";
+          
+          document.getElementById("quick-register-container").classList.add("hidden");
+          document.getElementById("license-success-container").classList.remove("hidden");
+          if (window.lucide) window.lucide.createIcons();
+          
+        } catch (err) {
+          console.error(err);
+          statusMsg.className = "rounded-lg p-3 text-xs border bg-red-50 border-red-200 text-red-800 flex items-start gap-2";
+          statusMsg.innerHTML = `<i data-lucide="alert-circle" class="w-4 h-4 shrink-0 mt-0.5"></i><span>Exception error: ${err.message}</span>`;
+          statusMsg.classList.remove("hidden");
+          if (window.lucide) window.lucide.createIcons();
+        } finally {
+          submitBtn.disabled = false;
+          spinner.classList.add("hidden");
+        }
+      }
+
+      function selectPayOption(method) {
+        selectedPayMethod = method;
+        const upiSelect = document.getElementById("pay-opt-upi");
+        const cardSelect = document.getElementById("pay-opt-card");
+        const upiBox = document.getElementById("upi-qr-display-box");
+        const cardBox = document.getElementById("card-inputs-display-box");
+        
+        if (method === 'upi') {
+          upiSelect.className = "border border-primary rounded-lg p-2.5 flex flex-col items-center justify-center gap-1 cursor-pointer bg-blue-50/50";
+          cardSelect.className = "border border-slate-200 rounded-lg p-2.5 flex flex-col items-center justify-center gap-1 cursor-pointer bg-slate-50";
+          upiBox.classList.remove("hidden");
+          cardBox.classList.add("hidden");
+        } else {
+          cardSelect.className = "border border-primary rounded-lg p-2.5 flex flex-col items-center justify-center gap-1 cursor-pointer bg-blue-50/50";
+          upiSelect.className = "border border-slate-200 rounded-lg p-2.5 flex flex-col items-center justify-center gap-1 cursor-pointer bg-slate-50";
+          cardBox.classList.remove("hidden");
+          upiBox.classList.add("hidden");
+        }
+        if (window.lucide) window.lucide.createIcons();
+      }
+
+      async function verifyLicenseID() {
+        const licenseInput = document.getElementById("license-input");
+        const entered = licenseInput.value.trim().toUpperCase();
+        const statusMsg = document.getElementById("license-status-message");
+        const statusText = document.getElementById("license-status-text");
+        
+        if (!entered) {
+          statusText.textContent = "Please enter a valid License ID.";
+          statusMsg.classList.remove("hidden");
+          return;
+        }
+        
+        statusMsg.classList.add("hidden");
+        
+        const spinner = document.getElementById("license-spinner");
+        const verifyBtn = document.getElementById("verify-license-btn");
+        spinner.classList.remove("hidden");
+        verifyBtn.disabled = true;
+        
+        try {
+          if (!window.supabaseClient) {
+            statusText.textContent = "Database connection offline. Please check config.js setup.";
+            statusMsg.classList.remove("hidden");
+            spinner.classList.add("hidden");
+            verifyBtn.disabled = false;
+            return;
+          }
+          
+          // Check if the license matches any user's license_id row
+          const { data, error } = await window.supabaseClient
+            .from("users")
+            .select("email, license_id")
+            .eq("license_id", entered);
+            
+          if (error) {
+            console.error(error);
+            statusText.textContent = "Database communication error: " + error.message;
+            statusMsg.classList.remove("hidden");
+          } else if (data && data.length > 0) {
+            // SUCCESS! Match found!
+            localStorage.setItem("workspace_license_id", entered);
+            
+            // Re-render views
+            document.getElementById("license-gate-container").classList.add("hidden");
+            document.getElementById("auth-form-wrapper").classList.remove("hidden");
+            
+            // Auto fill email address
+            const authEmailField = document.getElementById("auth-email");
+            if (authEmailField) {
+              authEmailField.value = data[0].email;
+            }
+          } else {
+            statusText.textContent = "License ID does not match our records. Don't generate license ID automatically.";
+            statusMsg.classList.remove("hidden");
+          }
+        } catch (err) {
+          console.error(err);
+          statusText.textContent = "Connection standard failure: " + err.message;
+          statusMsg.classList.remove("hidden");
+        } finally {
+          spinner.classList.add("hidden");
+          verifyBtn.disabled = false;
+          if (window.lucide) window.lucide.createIcons();
+        }
+      }
+
+      async function handleCheckoutSubmit(event) {
+        event.preventDefault();
+        const email = document.getElementById("checkout-email").value.trim().toLowerCase();
+        const paidCash = document.getElementById("checkout-paid-cash").checked;
+        const submitBtn = document.getElementById("complete-checkout-btn");
+        const spinner = document.getElementById("checkout-spinner");
+        
+        if (!email) {
+          alert("Please specify a valid email address.");
+          return;
+        }
+        
+        if (!paidCash) {
+          alert("Please check and confirm 'Paid on-cash' with first administrator.");
+          return;
+        }
+        
+        submitBtn.disabled = true;
+        spinner.classList.remove("hidden");
+        
+        try {
+          if (!window.supabaseClient) {
+            alert("Supabase is not configured yet inside your workspace. Check config.js");
+            submitBtn.disabled = false;
+            spinner.classList.add("hidden");
+            return;
+          }
+          
+          // Check if user contains exact email ID in users table
+          const { data: users, error: selectErr } = await window.supabaseClient
+            .from("users")
+            .select("*")
+            .eq("email", email);
+            
+          if (selectErr) {
+            console.error(selectErr);
+            alert("License ledger error: " + selectErr.message);
+            submitBtn.disabled = false;
+            spinner.classList.add("hidden");
+            return;
+          }
+          
+          let targetLicenseId = "";
+          
+          if (users && users.length > 0) {
+            // Existing user profiles
+            const matchedUser = users[0];
+            if (matchedUser.license_id) {
+              // Give it the same license ID as shown to user on screen
+              targetLicenseId = matchedUser.license_id;
+            } else {
+              // Exists but has no license ID, update standard column
+              targetLicenseId = generateRandomLicenseID();
+              const { error: updateErr } = await window.supabaseClient
+                .from("users")
+                .update({ license_id: targetLicenseId })
+                .eq("email", email);
+                
+              if (updateErr) {
+                console.error(updateErr);
+                alert("Failed to allocate license ID inside profile: " + updateErr.message);
+                submitBtn.disabled = false;
+                spinner.classList.add("hidden");
+                return;
+              }
+            }
+          } else {
+            // Newly registered customer email
+            targetLicenseId = generateRandomLicenseID();
+            const { error: insertErr } = await window.supabaseClient
+              .from("users")
+              .insert({
+                id: generateUUID(),
+                email: email,
+                license_id: targetLicenseId,
+                full_name: "Petroleum Operator"
+              });
+              
+            if (insertErr) {
+              console.error(insertErr);
+              alert("Failed to save license column inside ledger: " + insertErr.message);
+              submitBtn.disabled = false;
+              spinner.classList.add("hidden");
+              return;
+            }
+          }
+          
+          // Cache verified license
+          localStorage.setItem("workspace_license_id", targetLicenseId);
+          
+          // Display details
+          document.getElementById("displayed-license-id").textContent = targetLicenseId;
+          document.getElementById("displayed-license-email").textContent = email;
+          
+          // Swap screens
+          document.getElementById("yearly-checkout-container").classList.add("hidden");
+          document.getElementById("license-success-container").classList.remove("hidden");
+          
+        } catch (err) {
+          console.error(err);
+          alert("Connection exception error occurred: " + err.message);
+        } finally {
+          submitBtn.disabled = false;
+          spinner.classList.add("hidden");
+          if (window.lucide) window.lucide.createIcons();
+        }
+      }
+
+      function copyLicenseToClipboard() {
+        const text = document.getElementById("displayed-license-id").textContent;
+        navigator.clipboard.writeText(text).then(() => {
+          alert(`License ID copied: ${text}`);
+        }).catch(err => {
+          console.error("Copy failed", err);
+        });
+      }
+
+      function applyVerifiedLicenseAndGoToAuth() {
+        // Retrieve the recently saved license from local cache
+        const actualLicense = localStorage.getItem("workspace_license_id");
+        if (actualLicense) {
+          document.getElementById("license-input").value = actualLicense;
+          
+          // Show auth form directly and hide success container
+          document.getElementById("license-success-container").classList.add("hidden");
+          document.getElementById("auth-form-wrapper").classList.remove("hidden");
+          
+          // Sync email
+          const linkedEmail = document.getElementById("displayed-license-email").textContent;
+          if (linkedEmail) {
+            document.getElementById("auth-email").value = linkedEmail;
+          }
+        } else {
+          showLicenseGateScreen();
+        }
+        if (window.lucide) window.lucide.createIcons();
+      }
+
+      function switchLicense() {
+        if (confirm("Disconnect current workspace license authorization?")) {
+          localStorage.removeItem("workspace_license_id");
+          document.getElementById("license-input").value = "";
+          showLicenseGateScreen();
+        }
+      }
+
+      // ----------------------------------------------------
+      // Original Signup/Login Form Switch Action Handlers
+      // ----------------------------------------------------
+
+      function setAuthMode(mode) {
+        currentMode = mode;
+        const signinTabBtn = document.getElementById("mode-signin-btn");
+        const signupTabBtn = document.getElementById("mode-signup-btn");
+        const nameContainer = document.getElementById("full-name-container");
+        const nameInput = document.getElementById("reg-name");
+        const submitLabel = document.getElementById("btn-label-text");
+
+        hideStatusBar();
+
+        if (mode === 'signup') {
+          signinTabBtn.className = "py-1.5 text-xs font-semibold text-industrial-muted hover:text-industrial-dark rounded-md transition-all duration-150";
+          signupTabBtn.className = "py-1.5 text-xs font-bold rounded-md transition-all duration-150 text-white bg-primary";
+          nameContainer.classList.remove("hidden");
+          if (nameInput) nameInput.required = true;
+          submitLabel.textContent = "Create Workspace Account";
+        } else {
+          signupTabBtn.className = "py-1.5 text-xs font-semibold text-industrial-muted hover:text-industrial-dark rounded-md transition-all duration-150";
+          signinTabBtn.className = "py-1.5 text-xs font-bold rounded-md transition-all duration-150 text-white bg-primary";
+          nameContainer.classList.add("hidden");
+          if (nameInput) nameInput.required = false;
+          submitLabel.textContent = "Sign In to Dashboard";
+        }
+      }
+
+      function showStatus(text, type = 'error') {
+        const bar = document.getElementById("auth-status-bar");
+        bar.className = `flex items-start gap-2 rounded-lg p-3 text-xs border ${
+          type === 'success' 
+            ? 'bg-emerald-50 border-emerald-200 text-emerald-800' 
+            : 'bg-red-50 border-red-200 text-red-800'
+        }`;
+        
+        const icon = type === 'success' ? 'check-circle' : 'alert-circle';
+        bar.innerHTML = `
+          <i data-lucide="${icon}" class="w-4 h-4 shrink-0"></i>
+          <span class="leading-normal font-medium">${text}</span>
+        `;
+        bar.classList.remove("hidden");
+        if (window.lucide) window.lucide.createIcons();
+      }
+
+      function hideStatusBar() {
+        const bar = document.getElementById("auth-status-bar");
+        if (bar) bar.classList.add("hidden");
+      }
+
+      async function handleAuthSubmit(event) {
+        event.preventDefault();
+        hideStatusBar();
+
+        if (isPlaceholderConfig() || !window.supabaseClient) {
+          showStatus("Supabase client is not configured correctly. Please check config.js file.", "error");
+          return;
+        }
+
+        const email = document.getElementById("auth-email").value.trim();
+        const password = document.getElementById("auth-password").value;
+        const name = document.getElementById("reg-name")?.value.trim() || "";
+
+        const submitBtn = document.getElementById("submit-auth-btn");
+        const loader = document.getElementById("loader-spinner");
+        submitBtn.disabled = true;
+        loader.classList.remove("hidden");
+
+        try {
+          if (currentMode === 'signup') {
+            const { data, error } = await window.supabaseClient.auth.signUp({
+              email,
+              password,
+              options: {
+                data: {
+                  full_name: name || "Petroleum Operator"
+                },
+                emailRedirectTo: window.location.origin
+              }
+            });
+
+            if (error) {
+              const errMsg = error.message;
+              const isAlreadyReg = errMsg.toLowerCase().includes("already registered") || 
+                                   errMsg.toLowerCase().includes("already exists") ||
+                                   errMsg.toLowerCase().includes("email_exists") ||
+                                   errMsg.toLowerCase().includes("unique constraint");
+              if (isAlreadyReg) {
+                showStatus(`The email <strong>${email}</strong> has already been registered. Please click <strong>Sign In</strong> above instead!`, "error");
+              } else {
+                showStatus(errMsg, "error");
+              }
+              submitBtn.disabled = false;
+              loader.classList.add("hidden");
+              return;
+            }
+
+            if (data?.user) {
+              showStatus("Account created! You can now sign in.", "success");
+              setTimeout(() => {
+                setAuthMode('signin');
+                document.getElementById("auth-password").value = "";
+                submitBtn.disabled = false;
+                loader.classList.add("hidden");
+              }, 1500);
+            } else {
+              submitBtn.disabled = false;
+              loader.classList.add("hidden");
+            }
+          } else {
+            const { data, error } = await window.supabaseClient.auth.signInWithPassword({
+              email,
+              password
+            });
+
+            if (error) {
+              showStatus(error.message, "error");
+              submitBtn.disabled = false;
+              loader.classList.add("hidden");
+              return;
+            }
+
+            if (data?.session) {
+              showStatus("Sign in verified. Welcome back!", "success");
+              setTimeout(() => {
+                window.location.href = "dashboard.html";
+              }, 1000);
+            }
+          }
+        } catch (err) {
+          showStatus("An unexpected connection error occurred. Please try again.", "error");
+          console.error(err);
+          submitBtn.disabled = false;
+          loader.classList.add("hidden");
+        }
+      }
+
+      // ----------------------------------------------------
+      // On Page Loaded Core Initialization Routines
+      // ----------------------------------------------------
+
+      document.addEventListener("DOMContentLoaded", async () => {
+        if (window.lucide) window.lucide.createIcons();
+
+        // Check if config is missing
+        const isMissed = isPlaceholderConfig() || !window.supabaseClient;
+        if (isMissed) {
+          document.getElementById("license-gate-container").classList.add("hidden");
+          document.getElementById("auth-form-wrapper").classList.add("hidden");
+          document.getElementById("config-instructions").classList.remove("hidden");
+          return;
+        } else {
+          document.getElementById("config-instructions").classList.add("hidden");
+        }
+
+        // Configuration exists! Check if there is an authorized license cached locally
+        const cachedLicense = localStorage.getItem("workspace_license_id");
+        if (cachedLicense) {
+          // Verify on ledger for safety in the background or immediately
+          try {
+            const { data, error } = await window.supabaseClient
+              .from("users")
+              .select("email, license_id")
+              .eq("license_id", cachedLicense);
+              
+            if (!error && data && data.length > 0) {
+              // Valid cached license ID: reveal Sign Up / Sign In directly
+              document.getElementById("license-gate-container").classList.add("hidden");
+              document.getElementById("auth-form-wrapper").classList.remove("hidden");
+              
+              // Fill email text from record to be helpful
+              const authEmailField = document.getElementById("auth-email");
+              if (authEmailField) {
+                authEmailField.value = data[0].email;
+              }
+            } else {
+              // Invalid/wiped from backend, reset and show enter license screen
+              localStorage.removeItem("workspace_license_id");
+              showLicenseGateScreen();
+            }
+          } catch(e) {
+            // Offline/connection issues: let them proceed with cached key
+            document.getElementById("license-gate-container").classList.add("hidden");
+            document.getElementById("auth-form-wrapper").classList.remove("hidden");
+          }
+        } else {
+          // No cached license. User must complete license verification flow
+          showLicenseGateScreen();
+        }
+
+        const params = new URLSearchParams(window.location.search);
+        if (params.get("error") === "config_missing") {
+          showStatus("Authentication is disabled because Supabase credentials are not configured yet inside your config.js.", "error");
+        }
+        if (window.lucide) window.lucide.createIcons();
+      });
+    </script>
+  </body>
+</html>

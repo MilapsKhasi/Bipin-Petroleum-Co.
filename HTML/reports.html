@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bipin Petroleum Co. Reports</title>
+    <link rel="stylesheet" href="../CSS/reports.css">
+    <!-- Supabase and Auth checking modules -->
+    <script>
+      // Fix for "Cannot set property fetch of #<Window> which has only a getter" issue in sandbox environments
+      (function() {
+        try {
+          const originalFetch = window.fetch;
+          Object.defineProperty(window, 'fetch', {
+            value: originalFetch,
+            writable: true,
+            configurable: true,
+            enumerable: true
+          });
+        } catch (e) {
+          console.warn("Could not patch window.fetch", e);
+        }
+      })();
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../config.js"></script>
+    <script src="../js/auth.js"></script>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              border: "hsl(var(--border))",
+              background: "hsl(var(--background))",
+              foreground: "hsl(var(--foreground))",
+              primary: {
+                DEFAULT: "hsl(var(--primary))",
+                foreground: "hsl(var(--primary-foreground))",
+              },
+              secondary: {
+                DEFAULT: "hsl(var(--secondary))",
+                foreground: "hsl(var(--secondary-foreground))",
+              },
+              destructive: {
+                DEFAULT: "hsl(var(--destructive))",
+                foreground: "hsl(var(--destructive-foreground))",
+              },
+              muted: {
+                DEFAULT: "hsl(var(--muted))",
+                foreground: "hsl(var(--muted-foreground))",
+              },
+              accent: {
+                DEFAULT: "hsl(var(--accent))",
+                foreground: "hsl(var(--accent-foreground))",
+              },
+              blue: {
+                50: '#eff6ff',
+                150: '#dbeafe',
+                100: '#bfdbfe',
+                200: '#93c5fd',
+                300: '#60a5fa',
+                400: '#3b82f6',
+                505: '#2563eb',
+                500: '#2563eb',
+                600: '#2563eb',
+                705: '#1d4ed8',
+                800: '#1e40af',
+                900: '#1e3a8a'
+              },
+              slate: {
+                900: '#0f172a'
+              }
+            },
+            fontFamily: {
+              sans: ['Poppins', '-apple-system', 'sans-serif'],
+              mono: ['JetBrains Mono', 'monospace']
+            }
+          }
+        }
+      };
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+  </head>
+  <body class="bg-slate-50 text-slate-900 h-screen overflow-hidden flex flex-col">
+    
+    <!-- Mobile Header -->
+    <header class="no-print bg-white border-b border-slate-200 md:hidden flex items-center justify-between px-4 py-3 z-30 shrink-0">
+       <div class="flex items-center gap-2">
+         <!-- SVG Logo -->
+         <svg class="w-10 h-7 shrink-0" viewBox="0 0 100 35" fill="none" xmlns="http://www.w3.org/2000/svg">
+           <text x="2" y="28" font-family="'Poppins', sans-serif" font-weight="600" font-style="italic" font-size="28" fill="#1d4ed8">b</text>
+           <text x="20" y="28" font-family="'Poppins', sans-serif" font-weight="600" font-style="italic" font-size="28" fill="#2563eb">p</text>
+           <text x="36" y="28" font-family="'Poppins', sans-serif" font-weight="600" font-style="italic" font-size="28" fill="#1d4ed8">c</text>
+           <path d="M29,12 C28,2 38,0 44,5 C42,10 35,16 29,12 Z" fill="#22c55e" />
+         </svg>
+         <span class="font-semibold text-base tracking-tight text-slate-900 leading-tight">Bipin Petroleum <span class="text-xs text-blue-600 font-medium bg-blue-50 border border-blue-100 rounded px-1 mt-0.5">Co.</span></span>
+       </div>
+       <button id="mobile-menu-btn" class="text-slate-600 hover:text-slate-900 p-1 rounded hover:bg-slate-100">
+         <i data-lucide="menu" class="w-6 h-6"></i>
+       </button>
+     </header>
+
+     <div class="flex flex-1 overflow-hidden h-full">
+       <!-- Sidebar -->
+       <aside id="sidebar" class="no-print scale-100 fixed inset-y-0 left-0 -translate-x-full md:translate-x-0 md:static bg-slate-900 border-r border-slate-800 w-[220px] flex flex-col z-40 transition-transform duration-200 shrink-0 h-full text-white">
+         <div class="p-4 border-b border-slate-800 flex items-center justify-between">
+           <div class="flex items-center gap-2">
+             <!-- SVG Logo -->
+             <svg class="w-11 h-7 shrink-0" viewBox="0 0 100 35" fill="none" xmlns="http://www.w3.org/2000/svg">
+               <text x="2" y="28" font-family="'Poppins', sans-serif" font-weight="600" font-style="italic" font-size="28" fill="#38bdf8">b</text>
+               <text x="20" y="28" font-family="'Poppins', sans-serif" font-weight="600" font-style="italic" font-size="28" fill="#3b82f6">p</text>
+               <text x="36" y="28" font-family="'Poppins', sans-serif" font-weight="600" font-style="italic" font-size="28" fill="#38bdf8">c</text>
+               <path d="M29,12 C28,2 38,0 44,5 C42,10 35,16 29,12 Z" fill="#22c55e" />
+             </svg>
+             <span class="font-semibold text-sm tracking-tight text-white leading-tight">Bipin Petroleum <span class="block text-[8px] text-slate-400 uppercase tracking-widest font-semibold mt-0.5">Co.</span></span>
+           </div>
+           <button id="close-sidebar-btn" class="md:hidden text-slate-400 hover:text-white">
+             <i data-lucide="x" class="w-5 h-5"></i>
+           </button>
+         </div>
+
+        <nav class="flex-1 p-3 space-y-1 overflow-y-auto">
+          <a href="dashboard.html" data-route="dashboard" class="sidebar-item flex items-center gap-2.5 w-full px-3 py-2 text-xs text-slate-400 rounded-md hover:bg-white/5 hover:text-white font-medium transition-colors">
+            <i data-lucide="layout-dashboard" class="w-4 h-4 shrink-0 text-slate-400"></i>
+            Dashboard
+          </a>
+          
+          <a href="companies.html" data-route="companies" class="sidebar-item flex items-center gap-2.5 w-full px-3 py-2 text-xs text-slate-400 rounded-md hover:bg-white/5 hover:text-white font-medium transition-colors">
+            <i data-lucide="building-2" class="w-4 h-4 shrink-0 text-slate-400"></i>
+            Companies
+          </a>
+
+          <a href="sales.html" data-route="sales" class="sidebar-item flex items-center gap-2.5 w-full px-3 py-2 text-xs text-slate-400 rounded-md hover:bg-white/5 hover:text-white font-medium transition-colors justify-between text-left">
+            <span class="flex items-center gap-2.5">
+              <i data-lucide="file-text" class="w-4 h-4 shrink-0 text-slate-400"></i>
+              Sales / Invoices
+            </span>
+            <span id="badge-sales-count" class="bg-white/10 text-slate-300 text-[10px] px-1.5 py-0.5 rounded-full font-semibold">0</span>
+          </a>
+
+          <a href="purchase.html" data-route="purchase" class="sidebar-item flex items-center gap-2.5 w-full px-3 py-2 text-xs text-slate-400 rounded-md hover:bg-white/5 hover:text-white font-medium transition-colors justify-between text-left">
+            <span class="flex items-center gap-2.5">
+              <i data-lucide="shopping-cart" class="w-4 h-4 shrink-0 text-slate-400"></i>
+              Purchase
+            </span>
+            <span id="badge-purchase-count" class="bg-white/10 text-slate-300 text-[10px] px-1.5 py-0.5 rounded-full font-semibold">0</span>
+          </a>
+          
+          <a href="stock.html" data-route="stock" class="sidebar-item flex items-center gap-2.5 w-full px-3 py-2 text-xs text-slate-400 rounded-md hover:bg-white/5 hover:text-white font-medium transition-colors justify-between text-left">
+            <span class="flex items-center gap-2.5">
+              <i data-lucide="package" class="w-4 h-4 shrink-0 text-slate-400"></i>
+              Stock
+            </span>
+            <span id="badge-lowstock-count" class="bg-amber-950/40 text-amber-300 border border-amber-900/40 text-[10px] px-1.5 py-0.5 rounded-full font-semibold">0</span>
+          </a>
+
+          <a href="reports.html" data-route="reports" class="sidebar-item flex items-center gap-2.5 w-full px-3 py-2 text-xs text-slate-400 rounded-md hover:bg-white/5 hover:text-white font-medium transition-colors">
+            <i data-lucide="trending-up" class="w-4 h-4 shrink-0 text-slate-400"></i>
+            Reports
+          </a>
+          
+          <button onclick="openModal('Workspace Settings', Views.settings())" class="sidebar-item flex items-center gap-2.5 w-full px-3 py-2 text-xs text-slate-400 rounded-md hover:bg-white/5 hover:text-white font-medium transition-colors text-left">
+            <i data-lucide="settings" class="w-4 h-4 shrink-0 text-slate-400"></i>
+            Settings
+          </button>
+        </nav>
+
+        <div class="p-3 border-t border-slate-800 bg-slate-950/20">
+          <div class="flex items-center gap-1.5">
+            <div class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
+            <span class="text-[10px] text-slate-400 font-medium">Offline Storage Mode</span>
+          </div>
+          <div class="text-[9px] text-slate-500 mt-0.5">Saved automatically in browser</div>
+        </div>
+      </aside>
+
+      <!-- Main App Content Container -->
+      <main id="main-content" class="flex-1 overflow-y-auto p-4 md:p-8 outline-none">
+        <div id="view-container" class="max-w-7xl mx-auto space-y-6">
+          <!-- Dynamically loaded on load of /JavaScript/reports.js -->
+        </div>
+      </main>
+    </div>
+
+    <!-- Mobile dim overlay -->
+    <div id="sidebar-overlay" class="no-print hidden fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-30"></div>
+
+    <!-- Modals -->
+    <div id="modal-container" class="no-print hidden fixed inset-0 flex items-center justify-center z-50 p-4">
+      <div id="modal-backdrop" class="modal-backdrop absolute inset-0 bg-slate-900/40"></div>
+      <div id="modal-content-box" class="bg-white rounded-xl shadow-2xl z-10 w-full max-w-4xl max-h-[85vh] overflow-y-auto flex flex-col transform transition-transform duration-200 scale-95 opacity-0"></div>
+    </div>
+
+    <div id="alert-container" class="no-print hidden fixed inset-0 flex items-center justify-center z-50 p-4">
+      <div class="modal-backdrop absolute inset-0 bg-slate-900/40"></div>
+      <div id="alert-content-box" class="bg-white rounded-xl shadow-xl z-10 w-full max-w-md p-6 flex flex-col transform transition-all duration-150 scale-95"></div>
+    </div>
+
+    <div id="toast-wrapper" class="no-print fixed bottom-4 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- Core Database & Render script connections -->
+    <script src="../js/data.js"></script>
+    <script src="../js/numberToWords.js"></script>
+    <script src="../js/views.js"></script>
+    <script src="../script.js"></script>
+    <script src="../JavaScript/reports.js"></script>
+  </body>
+</html>

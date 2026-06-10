@@ -1,0 +1,267 @@
+/* Stylesheet for Bipin Petroleum Co. Accounting Application */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+  --primary-color: #2563EB;
+  --primary-color-hover: #1D4ED8;
+  --accent-oil-green: #10B981;
+  --bg-industrial: #F8FAFC;
+  --surface-card: #FFFFFF;
+  --text-dark: #0F172A;
+  --text-muted: #64748B;
+  --border-subtle: #E2E8F0;
+
+  --background: 210 40% 98%;
+  --foreground: 222.2 47.4% 11.2%;
+  --card: 0 0% 100%;
+  --card-foreground: 222.2 47.4% 11.2%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222.2 47.4% 11.2%;
+  --primary: 221.2 83.2% 53.3%; /* Premium Flat Blue #2563eb */
+  --primary-foreground: 210 20% 98%;
+  --secondary: 210 40% 96.1%;
+  --secondary-foreground: 222.2 47.4% 11.2%;
+  --muted: 210 40% 96.1%;
+  --muted-foreground: 215.4 16.3% 46.9%;
+  --accent: 210 40% 96.1%;
+  --accent-foreground: 222.2 47.4% 11.2%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 20% 98%;
+  --border: 214.3 31.8% 91.4%; /* border color #e2e8f0 */
+  --input: 214.3 31.8% 91.4%;
+  --ring: 221.2 83.2% 53.3%;
+  --radius: 6px;
+}
+
+body {
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+  background-color: var(--bg-industrial);
+  color: var(--text-dark);
+}
+
+/* Hard reset for flat look without any shadow */
+*, *::before, *::after {
+  box-shadow: none !important;
+  text-shadow: none !important;
+  outline-width: 0 !important;
+}
+
+pre, code, .font-mono {
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* PRISTINE FLAT UNIFIED SIDEBAR (Clean, flat design matching color scheme perfectly) */
+#sidebar {
+  background-color: #ffffff !important;
+  color: #0F172A !important;
+  border-right: 1px solid #e2e8f0 !important;
+}
+
+/* Sidebar header dividers & elements override */
+#sidebar .border-slate-800 {
+  border-color: #e2e8f0 !important;
+}
+
+#sidebar .text-white {
+  color: #0f172a !important;
+}
+
+#sidebar .text-slate-400 {
+  color: #64748b !important;
+}
+
+/* Sidebar item controls */
+#sidebar .sidebar-item {
+  color: #475569 !important;
+  background-color: transparent !important;
+  border-radius: 6px !important;
+  font-weight: 500 !important;
+  transition: all 120ms ease-in-out !important;
+  border-left: none !important;
+  margin-bottom: 3px !important;
+  padding: 8.5px 12px !important;
+}
+
+/* Sidebar hover state */
+#sidebar .sidebar-item:hover {
+  color: #0f172a !important;
+  background-color: #f1f5f9 !important;
+}
+
+/* Active sidebar item (perfect brand color matching without shadow) */
+#sidebar .active-sidebar-item,
+#sidebar .sidebar-active {
+  background-color: #2563eb !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  border-left: none !important;
+  border-radius: 6px !important;
+}
+
+#sidebar .active-sidebar-item:hover,
+#sidebar .sidebar-active:hover {
+  background-color: #1d4ed8 !important;
+  color: #ffffff !important;
+}
+
+/* Current active item icons */
+#sidebar .sidebar-item i,
+#sidebar .sidebar-item svg {
+  color: currentColor !important;
+}
+
+/* Badge count alignments inside white sidebar */
+#sidebar span[id*="badge-"] {
+  background-color: #f1f5f9 !important;
+  border: 1px solid #e2e8f0 !important;
+  color: #475569 !important;
+  font-weight: 700 !important;
+}
+
+#sidebar .active-sidebar-item span[id*="badge-"] {
+  background-color: rgba(255, 255, 255, 0.2) !important;
+  border-color: transparent !important;
+  color: #ffffff !important;
+}
+
+/* Beautiful Cloud Sync indicators custom flat card block */
+#sidebar .bg-slate-900,
+#sidebar .bg-slate-950\/20 {
+  background-color: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+  color: #475569 !important;
+  border-radius: 8px !important;
+}
+
+#sidebar button {
+  background-color: #f1f5f9 !important;
+  color: #0f172a !important;
+  border: 1px solid #e2e8f0 !important;
+  transition: all 100ms ease;
+}
+#sidebar button:hover {
+  background-color: #e2e8f0 !important;
+}
+
+#sidebar .border-slate-805 {
+  border-color: #e2e8f0 !important;
+}
+
+/* UI Card Overrides - strictly flat & clean lines without shadows */
+.bg-white,
+[class*="bg-industrial-card"] {
+  background-color: #ffffff !important;
+  border-radius: 8px !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+/* High Density Styles */
+/* Compact Tables */
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+table th {
+  background: #f8fafc !important;
+  color: #475569 !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.03em !important;
+  text-transform: uppercase !important;
+  padding: 10px 14px !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+}
+table td {
+  font-size: 12px !important;
+  padding: 10px 14px !important;
+  border-bottom: 1px solid #f1f5f9 !important;
+}
+
+/* Dense form elements */
+input[type="text"], input[type="number"], input[type="date"], select, textarea {
+  font-family: 'Poppins', sans-serif !important;
+  padding: 8px 12px !important;
+  font-size: 13px !important;
+  border-radius: 6px !important;
+  border-color: var(--border-subtle) !important;
+  background-color: var(--surface-card) !important;
+  border-width: 1px !important;
+  transition: all 100ms ease;
+}
+input:focus, select:focus, textarea:focus {
+  border-color: var(--primary-color) !important;
+  outline: none !important;
+}
+
+/* Solid layout density buttons */
+.btn-primary, button.bg-blue-600 {
+  background-color: var(--primary-color) !important;
+  font-family: 'Poppins', sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: #ffffff !important;
+  padding: 8px 16px !important;
+  border-radius: 6px !important;
+  transition: all 120ms ease;
+  border: none;
+  cursor: pointer;
+}
+.btn-primary:hover, button.bg-blue-600:hover {
+  background-color: var(--primary-color-hover) !important;
+}
+
+/* Container density adjustment */
+#view-container {
+  gap: 16px !important;
+  margin-top: 8px !important;
+}
+
+/* Modal styles client side */
+.modal-backdrop {
+  background-color: rgba(15, 23, 42, 0.3);
+  backdrop-filter: blur(2px);
+}
+
+/* Printing rules for Invoice & Ledgers */
+@media print {
+  body {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    font-size: 10px !important;
+  }
+  
+  .no-print {
+    display: none !important;
+  }
+  
+  .print-area {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+  }
+  
+  #main-content {
+    margin-left: 0 !important;
+    padding: 0 !important;
+  }
+}
