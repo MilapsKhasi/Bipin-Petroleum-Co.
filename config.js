@@ -1,2 +1,2 @@
-window.SUPABASE_URL = process.env.SUPABASE_URL;
-window.SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY;
+window.SUPABASE_URL = "__SUPABASE_URL__";
+window.SUPABASE_ANON_KEY = "__SUPABASE_ANON_KEY__";
