@@ -1,2 +1,2 @@
-window.SUPABASE_URL = "__SUPABASE_URL__";
-window.SUPABASE_ANON_KEY = "__SUPABASE_ANON_KEY__";
+window.SUPABASE_URL = "https://lcplkoimhqgzxhmloiaw.supabase.co/rest/v1/";
+window.SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxjcGxrb2ltaHFnenhobWxvaWF3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA3MDY4MDYsImV4cCI6MjA5NjI4MjgwNn0.6snnZRhJZFiy8H4etgWXz3FP_FbEZzfiv38J1OCv6Cs";
