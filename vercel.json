@@ -1,5 +1,7 @@
 {
-  "buildCommand": "echo 'Building...'",
+  "buildCommand": "",
   "outputDirectory": ".",
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
 }
